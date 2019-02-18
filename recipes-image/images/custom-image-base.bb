@@ -1,5 +1,5 @@
-require recipes-image/images/custom-users.inc 
-require recipes-image/images/custom-permissions.inc
+#require recipes-image/images/custom-users.inc 
+#require recipes-image/images/custom-permissions.inc
 
 IMAGE_BASE_INSTALL = "\
                        packagegroup-custom-utils \
@@ -21,8 +21,9 @@ IMAGE_3_BASE_INSTALL = "\
                        "
 
 #IMAGE_INSTALL += "${IMAGE_BASE_INSTALL} ${IMAGE_2_BASE_INSTALL} ${IMAGE_3_BASE_INSTALL}
-IMAGE_INSTALL_append = "${IMAGE_BASE_INSTALL}"
-IMAGE_INSTALL_append_pn-custom-image-dev = "${IMAGE_2_BASE_INSTALL}"
-IMAGE_FEATURES += "ssh-server-openssh"
+IMAGE_INSTALL_append = " openssl10"
+#IMAGE_INSTALL_append_pn-custom-image-dev = "${IMAGE_2_BASE_INSTALL}"
+#IMAGE_FEATURES += "ssh-server-openssh"
+#IMAGE_INSTALL_append = " packagegroup-custom"
 
 inherit core-image

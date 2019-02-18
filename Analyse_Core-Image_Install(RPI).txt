@@ -1,0 +1,80 @@
+# poky/meta/conf/distro/include/default-distrovars.inc
+DISTRO_FEATURES_DEFAULT ?= "acl alsa argp bluetooth ext2 irda largefile pcmcia usbgadget usbhost wifi xattr nfs zeroconf pci 3g nfc x11"
+DISTRO_FEATURES_DEFAULT_remove = "alsa argp bluetooth irda pcmia usbgadget usbhost wifi nfs zeroconf pci 3g nfc x11"
+---------------------------------------
+DISTRO_FEATURES_DEFAULT = "acl ext2 largefile pcmia xattr"
+
+# poky/meta/conf/distro/include/default-distrovars.inc
+DISTRO_FEATURES_LIBC_DEFAULT ?= "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-charsets libc-crypt libc-crypt-ufc libc-db-aliases libc-envz libc-fcvt libc-fmtmsg libc-fstab libc-ftraverse libc-getlogin libc-idn libc-inet-anl libc-libm libc-locales libc-locale-code libc-memusage libc-nsswitch libc-rcmd libc-rtld-debug libc-spawn libc-streams libc-utmp libc-utmpx libc-wordexp libc-posix-clang-wchar libc-posix-regexp libc-posix-regexp-glibc libc-posix-wchar-io"
+DISTRO_FEATURES_LIBC ?= "${DISTRO_FEATURES_LIBC_DEFAULT}"
+
+# poky/meta-poky/conf/distro/poky.conf
+POKY_DEFAULT_DISTRO_FEATURES = "largefile opengl ptest multiarch wayland vulkan"
+POKY_DEFAULT_DISTRO_FEATURES_remove = "opengl ptest multiarch wayland" 
+---------------------------------------
+POKY_DEFAULT_DISTRO_FEATURES = "largefile vulkan"
+
+# poky/meta/conf/bitbake.conf
+DISTRO_FEATURES_BACKFILL = "pulseaudio sysvinit bluez5 gobject-introspection-data ldconfig"
+DISTRO_FEATURES_BACKFILL_CONSIDERED = "pulseaudio"
+---------------------------------------
+DISTRO_FEATURES_BACKFILL = "sysvinit bluez5 gobject-introspection-data ldconfig"
+
+=======================================
+
+DISTRO_FEATURES ?= "${DISTRO_FEATURES_DEFAULT} ${DISTRO_FEATURES_LIBC} ${POKY_DEFAULT_DISTRO_FEATURES}"
+_______________________________________
+DISTRO_FEATURES = "acl ext2 largefile pcmia xattr ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-charsets libc-crypt libc-crypt-ufc libc-db-aliases libc-envz libc-fcvt libc-fmtmsg libc-fstab libc-ftraverse libc-getlogin libc-idn libc-inet-anl libc-libm libc-locales libc-locale-code libc-memusage libc-nsswitch libc-rcmd libc-rtld-debug libc-spawn libc-streams libc-utmp libc-utmpx libc-wordexp libc-posix-clang-wchar libc-posix-regexp libc-posix-regexp-glibc libc-posix-wchar-io largefile vulkan sysvinit bluez5 gobject-introspection-data ldconfig"
+
++++++++++++++++++++++++++++++++++++++++
+
+# meta-raspberrypi/conf/machine/include/rpi-base.inc
+MACHINE_FEATURES += "apm usbhost keyboard vfat ext2 screen touchscreen alsa bluetooth wifi sdio"
+
+# meta-raspberrypi/conf/machine/raspberrypi3-64.conf
+MACHINE_FEATURES_append = " vc4graphics"
+
+# poky/meta/conf/bitbake.conf
+MACHINE_FEATURES_BACKFILL = "rtc qemu-usermode"
+MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc"
+---------------------------------------
+MACHINE_FEATURES_BACKFILL = "qemu-usermode"
+
+=======================================
+_______________________________________
+MACHINE_FEATURES =" apm usbhost keyboard vfat ext2 screen touchscreen alsa bluetooth wifi sdio vc4graphics qemu-usermode"
+
++++++++++++++++++++++++++++++++++++++++
+
+COMBINED_FEATURES = "ext2"
+
++++++++++++++++++++++++++++++++++++++++
+
+IMAGE_INSTALL ?= "packagegroup-base-extended packagegroup-core-boot"
+
+# poky/meta-recipes-core/packagegroups/packagegroup-base.bb
+packagegroup-base-extended:
+RDEPENDS    packagegroup-core-boot module-init-tools packagegroup-base-ipv6
+
+RRECOMMENDS kernel-module-af-packet
+            kernel-modules udev-rules
+
+# poky/meta-recipes-core/packagegroups/packagegroup-core-boot.bb
+packagegroup-core-boot:
+RDEPENDS    base-files base-passwd busybox modutils-initscripts init-ifupdown initscripts netbase sysvinit udev update-alternatives-opkg ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}
+
+RRECOMMENDS busybox-syslog ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}
+
+RPI keymaps
+Unknown: dwarfsrcfiles-native eudev gcc-runtime glibc opkg-utils pseudo-native rpm-native 
+
+=======================================
+# poky/meta/classes/core-image.bbclass
+Core-Image
+
+# Runtime Dependency works like IMAGE_INSTALL
+RDEPENDS    base-files base-passwd busybox modutils-initscripts init-ifupdown initscripts netbase sysvinit udev update-alternatives-opkg ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS} module-init-tools
+
+# Recommend for Image, nice to have ;)
+RRECOMMENDS kernel-module-af-packet kernel-modules udev-rules busybox-syslog ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}
+
